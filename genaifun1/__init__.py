@@ -23,7 +23,7 @@ def main(myblob: func.InputStream):
                  f"Blob Size: {myblob.length} bytes")
     
 
-    with urllib.request.urlopen(f"https://genaiazurefun.blob.core.windows.net/container1/{myblob.name}") as response:
+    with urllib.request.urlopen(f"https://genaiazurefun.blob.core.windows.net/container1/{myblob.name}.csv") as response:
         context = response.read().decode('utf-8')
     
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
