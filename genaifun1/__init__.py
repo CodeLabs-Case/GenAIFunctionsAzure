@@ -1,4 +1,5 @@
 # GenAIFunAzure1
+# Deploy Test
 import logging
 
 import azure.functions as func
