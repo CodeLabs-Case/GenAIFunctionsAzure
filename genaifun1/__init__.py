@@ -1,6 +1,5 @@
 # function: genaifun1
 
-# Deploy Test
 import logging
 import urllib.request
 from azure.storage.blob import BlobServiceClient
