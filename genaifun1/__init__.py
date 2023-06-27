@@ -27,7 +27,7 @@ def main(myblob: func.InputStream):
         context = response.read().decode('utf-8')
     
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
-    file_name=f'{myblob.name}_output_{timestamp}.csv'
+    file_name=f'output_{timestamp}.csv'
 
     blob_service_client = BlobServiceClient.from_connection_string(connection_string)
     container_client = blob_service_client.get_container_client(output_container_name)
