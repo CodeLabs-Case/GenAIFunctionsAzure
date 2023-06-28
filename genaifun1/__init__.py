@@ -26,7 +26,9 @@ def main(myblob: func.InputStream):
     # with urllib.request.urlopen(f"https://genaiazurefun.blob.core.windows.net/container1/{myblob.name}") as response:
     #     context = response.read().decode('utf-8')
 
-    with urllib.request.urlopen(f"https://genaiazurefun.blob.core.windows.net/container1/{myblob.name}") as response:
+    blob_url = f"https://genaiazurefun.blob.core.windows.net/container1/{myblob.name}"
+
+    with urllib.request.urlopen(blob_url) as response:
         context = response.read().decode('utf-8')
     
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
