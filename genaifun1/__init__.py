@@ -53,6 +53,9 @@ def main(myblob: func.InputStream):
     reviews = df['review']
     logging.info(f"\n===============\nReviews:\n{reviews}\n===============\n")
 
+    # Convert the dataframe back to a .CSV for later write to the target container
+    csv_data = df.to_csv(index=False)
+
 
 
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
@@ -63,4 +66,4 @@ def main(myblob: func.InputStream):
     blob_service_client = BlobServiceClient.from_connection_string(connection_string)
     container_client = blob_service_client.get_container_client(output_container_name)
     blob_client = container_client.get_blob_client(file_name)
-    blob_client.upload_blob(context, overwrite=True)
+    blob_client.upload_blob(csv_data, overwrite=True)
