@@ -69,7 +69,7 @@ def main(myblob: func.InputStream):
         messages = [
             {'role': 'system','content':f"I am going to give you csv data.Output csv data here with [product, review, type] headers where you use semantic analysis to determine if the review was [good, bad or neutral]. Here is the data: {csv_data}"}]
     )
-
+    content = response.choices[0].message['content'].strip()
 
 
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
@@ -78,4 +78,4 @@ def main(myblob: func.InputStream):
     blob_service_client = BlobServiceClient.from_connection_string(connection_string)
     container_client = blob_service_client.get_container_client(output_container_name)
     blob_client = container_client.get_blob_client(file_name)
-    blob_client.upload_blob(response, overwrite=True)
+    blob_client.upload_blob(content, overwrite=True)
