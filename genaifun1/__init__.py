@@ -6,6 +6,8 @@ from azure.storage.blob import BlobServiceClient
 import azure.functions as func
 import datetime
 import pandas as pd
+import openai
+import os
 
 connection_string = 'DefaultEndpointsProtocol=https;AccountName=genaiazurefun;AccountKey=m8WBdyeSy8tctCi/4phepBAcQhy0VhtiN+3nWsl0/w+F00HesbMGb8bz6KuS073l4kS3S6Wif4+L+AStyeZ+Qg==;EndpointSuffix=core.windows.net'
 input_container_name = 'container1'
@@ -18,6 +20,10 @@ blob_service_client = BlobServiceClient.from_connection_string(connection_string
 container_client = blob_service_client.get_container_client(input_container_name)
 
 def main(myblob: func.InputStream):
+    # Get API key
+    openai_api_key = os.environ['OPENAI_API_KEY']
+
+
 
     ### INPUT(S)
     # Basic logging
@@ -53,9 +59,13 @@ def main(myblob: func.InputStream):
 
 
 
-    ### OUTPUT
-    # Convert the dataframe back to a .CSV for later write to the target container
+    ### OPENAI
+    # Convert the dataframe back to a .csv for passing to OpenAI within a prompt
     csv_data = df.to_csv(index=False)
+    logging.info(f"\n===============\nReviews:\n{csv_data}\n===============\n")
+
+
+
 
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
     file_name=f"output_{timestamp}.csv"
