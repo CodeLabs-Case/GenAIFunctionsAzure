@@ -62,8 +62,12 @@ def main(myblob: func.InputStream):
     ### OPENAI
     # Convert the dataframe back to a .csv for passing to OpenAI within a prompt
     csv_data = df.to_csv(index=False)
-    logging.info(f"\n===============\nReviews:\n{csv_data}\n===============\n")
 
+    response = openai.ChatCompletion.create(
+        model = 'gpt-3.5-turbo-16k',
+        messages = [
+            {'role': 'system','content':f"I am going to give you csv data.Output csv data here with [product, review, type] headers where you use semantic analysis to determine if the review was [good, bad or neutral]. Here is the data: {csv_data}"}]
+    )
 
 
 
@@ -73,4 +77,4 @@ def main(myblob: func.InputStream):
     blob_service_client = BlobServiceClient.from_connection_string(connection_string)
     container_client = blob_service_client.get_container_client(output_container_name)
     blob_client = container_client.get_blob_client(file_name)
-    blob_client.upload_blob(csv_data, overwrite=True)
+    blob_client.upload_blob(response, overwrite=True)
