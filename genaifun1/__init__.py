@@ -44,15 +44,12 @@ def main(myblob: func.InputStream):
     # Remove leading and trailing whitespace from column names
     column_names = [name.strip() for name in rows[0]]
 
-
-
     # Create a pandas DataFrame from the rows
     df = pd.DataFrame(rows[1:], columns=column_names)
     logging.info(f"\n===============\nDataframe Contents:\n{df}\n===============\n")
 
-
-
-    # Extract the reviews from the dataframe
+    # Do a small upper transform on the review colum and log it
+    df['review'] = df['review'].str.upper()
     reviews = df['review']
     logging.info(f"\n===============\nReviews:\n{reviews}\n===============\n")
 
