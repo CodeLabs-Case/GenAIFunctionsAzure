@@ -41,10 +41,13 @@ def main(myblob: func.InputStream):
     lines = context.split('\n')
     rows = [line.split(',') for line in lines]
 
+    # Remove leading and trailing whitespace from column names
+    column_names = [name.strip() for name in rows[0]]
+
 
 
     # Create a pandas DataFrame from the rows
-    df = pd.DataFrame(rows[1:], columns=rows[0])
+    df = pd.DataFrame(rows[1:], columns=column_names)
     logging.info(f"\n===============\nDataframe Contents:\n{df}\n===============\n")
 
 
