@@ -31,8 +31,12 @@ def main(myblob: func.InputStream):
     with urllib.request.urlopen(blob_url) as response:
         context = response.read().decode('utf-8')
 
-    # Convert the context into a data-frame for transformations
-    df = pd.DataFrame([context], columns=['product','review'])
+    # Split the lines of the context variable into separate rows
+    lines = context.split('\n')
+    rows = [line.split(',') for line in lines]
+
+    # Create a pandas DataFrame from the rows
+    df = pd.DataFrame(rows[1:], columns=rows[0])
 
     logging.info(f"\n===============\nDataframe Contents:\n{df}\n===============\n")
     
