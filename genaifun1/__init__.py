@@ -24,24 +24,41 @@ def main(myblob: func.InputStream):
                  f"Name: {myblob.name}\n"
                  f"Blob Size: {myblob.length} bytes")
     
+
+
     # The value of myblob.name is of the pattern: <container_name/file_name>
     blob_url = f"https://genaiazurefun.blob.core.windows.net/{myblob.name}"
+
+
 
     # Use urllib to request the file, using blob_url
     with urllib.request.urlopen(blob_url) as response:
         context = response.read().decode('utf-8')
 
+
+
     # Split the lines of the context variable into separate rows
     lines = context.split('\n')
     rows = [line.split(',') for line in lines]
 
+
+
     # Create a pandas DataFrame from the rows
     df = pd.DataFrame(rows[1:], columns=rows[0])
-
     logging.info(f"\n===============\nDataframe Contents:\n{df}\n===============\n")
-    
+
+
+
+    # Extract the reviews from the dataframe
+    reviews = df['review']
+    logging.info(f"\n===============\nReviews:\n{reviews}\n===============\n")
+
+
+
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
     file_name=f"output_{timestamp}.csv"
+
+
 
     blob_service_client = BlobServiceClient.from_connection_string(connection_string)
     container_client = blob_service_client.get_container_client(output_container_name)
