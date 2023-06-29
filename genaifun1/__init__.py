@@ -63,6 +63,7 @@ def main(myblob: func.InputStream):
     # Convert the dataframe back to a .csv for passing to OpenAI within a prompt
     csv_data = df.to_csv(index=False)
 
+    openai.api_key = openai_api_key
     response = openai.ChatCompletion.create(
         model = 'gpt-3.5-turbo-16k',
         messages = [
