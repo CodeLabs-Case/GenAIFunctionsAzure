@@ -19,17 +19,14 @@ container_client = blob_service_client.get_container_client(input_container_name
 
 def main(myblob: func.InputStream):
 
+    ### INPUT(S)
     # Basic logging
     logging.info(f"Python blob trigger function processed blob \n"
                  f"Name: {myblob.name}\n"
                  f"Blob Size: {myblob.length} bytes")
     
-
-
     # The value of myblob.name is of the pattern: <container_name/file_name>
     blob_url = f"https://genaiazurefun.blob.core.windows.net/{myblob.name}"
-
-
 
     # Use urllib to request the file, using blob_url
     with urllib.request.urlopen(blob_url) as response:
@@ -37,6 +34,7 @@ def main(myblob: func.InputStream):
 
 
 
+    ### TRANSFORMATION(S)
     # Split the lines of the context variable into separate rows
     lines = context.split('\n')
     rows = [line.split(',') for line in lines]
@@ -53,15 +51,14 @@ def main(myblob: func.InputStream):
     reviews = df['review']
     logging.info(f"\n===============\nReviews:\n{reviews}\n===============\n")
 
+
+
+    ### OUTPUT
     # Convert the dataframe back to a .CSV for later write to the target container
     csv_data = df.to_csv(index=False)
 
-
-
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
     file_name=f"output_{timestamp}.csv"
-
-
 
     blob_service_client = BlobServiceClient.from_connection_string(connection_string)
     container_client = blob_service_client.get_container_client(output_container_name)
