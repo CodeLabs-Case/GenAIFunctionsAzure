@@ -9,6 +9,7 @@ import pandas as pd
 import openai
 import os
 
+
 connection_string = 'DefaultEndpointsProtocol=https;AccountName=genaiazurefun;AccountKey=m8WBdyeSy8tctCi/4phepBAcQhy0VhtiN+3nWsl0/w+F00HesbMGb8bz6KuS073l4kS3S6Wif4+L+AStyeZ+Qg==;EndpointSuffix=core.windows.net'
 input_container_name = 'container1'
 output_container_name = 'container1output'
@@ -52,11 +53,12 @@ def main(myblob: func.InputStream):
     df = pd.DataFrame(rows[1:], columns=column_names)
     logging.info(f"\n===============\nDataframe Contents:\n{df}\n===============\n")
 
+    '''
     # Do a small upper transform on the review colum and log it
     df['review'] = df['review'].str.upper()
     reviews = df['review']
     logging.info(f"\n===============\nReviews:\n{reviews}\n===============\n")
-
+    '''
 
 
     ### OPENAI
@@ -72,6 +74,8 @@ def main(myblob: func.InputStream):
     content = response.choices[0].message['content'].strip()
 
 
+
+    ### OUTPUT
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
     file_name=f"output_{timestamp}.csv"
 
