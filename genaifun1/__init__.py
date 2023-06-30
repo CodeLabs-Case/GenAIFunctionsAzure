@@ -40,7 +40,6 @@ def main(myblob: func.InputStream):
         context = response.read().decode('utf-8')
 
 
-
     ### TRANSFORMATION(S)
     # Split the lines of the context variable into separate rows
     lines = context.split('\n')
