@@ -5,8 +5,8 @@
       "name": "myblob",
       "type": "blobTrigger",
       "direction": "in",
-      "path": "container1",
-      "connection": "genaiazurefun_STORAGE"
+      "path": "container2",
+      "connection": ""
     }
   ]
 }
