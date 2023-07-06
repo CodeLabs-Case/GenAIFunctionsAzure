@@ -114,3 +114,4 @@ def main(myblob: func.InputStream):
     container_client = blob_service_client.get_container_client(output_container_name)
     blob_client = container_client.get_blob_client(file_name)
     blob_client.upload_blob(facts, overwrite=True)
+    
