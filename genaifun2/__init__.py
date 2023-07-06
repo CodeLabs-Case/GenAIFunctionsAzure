@@ -11,8 +11,6 @@ import os
 import re
 import time
 
-
-
 connection_string = 'DefaultEndpointsProtocol=https;AccountName=genaiazurefun;AccountKey=m8WBdyeSy8tctCi/4phepBAcQhy0VhtiN+3nWsl0/w+F00HesbMGb8bz6KuS073l4kS3S6Wif4+L+AStyeZ+Qg==;EndpointSuffix=core.windows.net'
 input_container_name = 'container2'
 output_container_name = 'container2output'
@@ -23,7 +21,7 @@ blob_service_client = BlobServiceClient.from_connection_string(connection_string
 # Get a reference to the container
 container_client = blob_service_client.get_container_client(input_container_name)
 
-def outline(prompt):
+def f_outline(prompt):
     response = openai.ChatCompletion.create(
         model = 'gpt-3.5-turbo-16k',
         messages = [
@@ -34,7 +32,7 @@ def outline(prompt):
 
     return outline
 
-def expansion(outline):
+def f_expansion(outline):
     response = openai.ChatCompletion.create(
         model = 'gpt-3.5-turbo-16k',
         messages = [
@@ -60,7 +58,7 @@ def expansion(outline):
     
     return final_string
 
-def facts(outline):
+def f_facts(outline):
     response = openai.ChatCompletion.create(
         model = 'gpt-3.5-turbo-16k',
         messages = [
@@ -96,13 +94,13 @@ def main(myblob: func.InputStream):
     openai.api_key = openai_api_key
     
     # Outline: Get the outline, re-use it 'n' times for each point
-    outline = outline(prompt)
+    outline = f_outline(prompt)
     
     # Expansion: Get the number of points in the outline 'n'. Commented out due to rate limit issues.
-    #expansion = expansion(outline)
+    #expansion = f_expansion(outline)
 
     # Facts: Get the facts in the generated content
-    facts = facts(outline)
+    facts = f_facts(outline)
 
 
 
@@ -114,4 +112,3 @@ def main(myblob: func.InputStream):
     container_client = blob_service_client.get_container_client(output_container_name)
     blob_client = container_client.get_blob_client(file_name)
     blob_client.upload_blob(facts, overwrite=True)
-    
