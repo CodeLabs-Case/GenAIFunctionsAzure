@@ -23,8 +23,6 @@ blob_service_client = BlobServiceClient.from_connection_string(connection_string
 # Get a reference to the container
 container_client = blob_service_client.get_container_client(input_container_name)
 
-
-
 def outline(prompt):
     response = openai.ChatCompletion.create(
         model = 'gpt-3.5-turbo-16k',
@@ -32,10 +30,9 @@ def outline(prompt):
             {'role': 'system','content':f"{prompt}"}]
     )
     outline = response.choices[0].message['content'].strip()
+    logging.info(f"\n\nOutline: {outline}\n\n")
 
     return outline
-
-
 
 def expansion(outline):
     response = openai.ChatCompletion.create(
@@ -57,25 +54,22 @@ def expansion(outline):
         response = openai.ChatCompletion.create(
         model = 'gpt-3.5-turbo-16k',
         messages = [
-            {'role': 'system','content':f"{outline}.\n Expand on point {i}, don't include your own response like 'certainly'"}]
+            {'role': 'system','content':f"{outline}.\n Expand on point {i}, don't include your own response like 'certainly.'"}]
         )
         final_string += "\n" + response.choices[0].message['content'].strip()
     
     return final_string
 
-
-
 def facts(outline):
     response = openai.ChatCompletion.create(
         model = 'gpt-3.5-turbo-16k',
         messages = [
-            {'role': 'system','content':f"Context: {outline}\nGive me a list of facts stated in the above context"}]
+            {'role': 'system','content':f"Context: {outline}\nGive me a list of facts stated in the above context, don't include your own response like 'certainly."}]
     )
     facts = response.choices[0].message['content'].strip()
-
+    logging.info(f"\n\nFacts: {facts}\n\n")
+    
     return facts
-
-
 
 def main(myblob: func.InputStream):
     # Get API key
