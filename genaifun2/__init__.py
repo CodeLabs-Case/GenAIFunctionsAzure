@@ -27,7 +27,7 @@ def main(myblob: func.InputStream):
     
     ### INPUT(S)
     # Basic logging
-    logging.info(f"Python blob trigger function processed blob \n"
+    logging.info(f"Python blob trigger function processed blob \n"  
                  f"Name: {myblob.name}\n"
                  f"Blob Size: {myblob.length} bytes")
 
@@ -36,4 +36,26 @@ def main(myblob: func.InputStream):
 
     # Use urllib to request the file, using blob_url
     with urllib.request.urlopen(blob_url) as response:
-        context = response.read().decode('utf-8')
+        prompt = response.read().decode('utf-8')
+
+
+
+    ### OPENAI
+    # Get the outline, re-use it 'n' times for each point
+    openai.api_key = openai_api_key
+    response = openai.ChatCompletion.create(
+        model = 'gpt-3.5-turbo-16k',
+        messages = [
+            {'role': 'system','content':f"{prompt}"}]
+    )
+    outline = response.choices[0].message['content'].strip()
+
+    # Get the number of points in the outline 'n'
+    response = openai.ChatCompletion.create(
+        model = 'gpt-3.5-turbo-16k',
+        messages = [
+            {'role': 'system','content':f"Tell me how many points are in the below outline:\n {outline}.\n Tell me how many points are in the above outline. Return only an integer/number."}]
+    )
+    n = response.choices[0].message['content'].strip()
+
+    logging.info(f"There are {n} points in the outline")
