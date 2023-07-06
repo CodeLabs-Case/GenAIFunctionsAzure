@@ -63,3 +63,25 @@ def main(myblob: func.InputStream):
     number = re.findall(r'\d+', n_sentence)
     n = int(number[0])
     logging.info(f"There are {n} points in the outline")
+
+    # Loop over each point in the outline, expand it, append the results to the string, then output to the final file
+    final_string = ""
+    for i in range(n):
+        i = i + 1
+        response = openai.ChatCompletion.create(
+        model = 'gpt-3.5-turbo-16k',
+        messages = [
+            {'role': 'system','content':f"{outline}.\n Expand on point {i}, don't include your own response like 'certainly'"}]
+    )
+    final_string += "\n" + response.choices[0].message['content'].strip()
+
+
+
+    ### OUTPUT
+    timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
+    file_name=f"output_{timestamp}.csv"
+
+    blob_service_client = BlobServiceClient.from_connection_string(connection_string)
+    container_client = blob_service_client.get_container_client(output_container_name)
+    blob_client = container_client.get_blob_client(file_name)
+    blob_client.upload_blob(final_string, overwrite=True)
