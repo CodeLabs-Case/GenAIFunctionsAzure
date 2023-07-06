@@ -8,6 +8,7 @@ import datetime
 import pandas as pd
 import openai
 import os
+import re
 
 connection_string = 'DefaultEndpointsProtocol=https;AccountName=genaiazurefun;AccountKey=m8WBdyeSy8tctCi/4phepBAcQhy0VhtiN+3nWsl0/w+F00HesbMGb8bz6KuS073l4kS3S6Wif4+L+AStyeZ+Qg==;EndpointSuffix=core.windows.net'
 input_container_name = 'container2'
@@ -54,8 +55,11 @@ def main(myblob: func.InputStream):
     response = openai.ChatCompletion.create(
         model = 'gpt-3.5-turbo-16k',
         messages = [
-            {'role': 'system','content':f"Tell me how many points are in the below outline:\n {outline}.\n Tell me how many points are in the above outline. Return only an integer/number."}]
+            {'role': 'system','content':f"{outline}.\n How many numbered points are in the above outline, do not include sub-points (letters)?"}]
     )
-    n = response.choices[0].message['content'].strip()
+    n_sentence = response.choices[0].message['content'].strip()
 
+    # Get 'n' from the sentence
+    number = re.findall(r'\d+', n_sentence)
+    n = int(number[0])
     logging.info(f"There are {n} points in the outline")
