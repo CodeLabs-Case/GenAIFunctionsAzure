@@ -9,6 +9,7 @@ import pandas as pd
 import openai
 import os
 import re
+import time
 
 connection_string = 'DefaultEndpointsProtocol=https;AccountName=genaiazurefun;AccountKey=m8WBdyeSy8tctCi/4phepBAcQhy0VhtiN+3nWsl0/w+F00HesbMGb8bz6KuS073l4kS3S6Wif4+L+AStyeZ+Qg==;EndpointSuffix=core.windows.net'
 input_container_name = 'container2'
@@ -72,14 +73,15 @@ def main(myblob: func.InputStream):
         model = 'gpt-3.5-turbo-16k',
         messages = [
             {'role': 'system','content':f"{outline}.\n Expand on point {i}, don't include your own response like 'certainly'"}]
-    )
-    final_string += "\n" + response.choices[0].message['content'].strip()
+        )
+        final_string += "\n" + response.choices[0].message['content'].strip()
+        time.sleep(20)
 
 
 
     ### OUTPUT
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
-    file_name=f"output_{timestamp}.csv"
+    file_name=f"output_{timestamp}.txt"
 
     blob_service_client = BlobServiceClient.from_connection_string(connection_string)
     container_client = blob_service_client.get_container_client(output_container_name)
