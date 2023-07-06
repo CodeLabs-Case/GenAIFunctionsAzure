@@ -22,7 +22,7 @@ container_client = blob_service_client.get_container_client(input_container_name
 
 def main(myblob: func.InputStream):
     # Get API key
-    #openai_api_key = os.environ['OPENAI_API_KEY']
+    openai_api_key = os.environ['OPENAI_API_KEY']
 
 
 
