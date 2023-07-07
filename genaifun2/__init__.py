@@ -28,7 +28,7 @@ def getOutline(prompt):
             {'role': 'system','content':f"{prompt}"}]
     )
     outline = response.choices[0].message['content'].strip()
-    logging.info(f"\n\nOutline: {outline}\n\n")
+    logging.info(f"\n\nOutline:\n{outline}\n\n")
 
     return outline
 
@@ -65,7 +65,7 @@ def getFacts(outline):
             {'role': 'system','content':f"Context: {outline}\nGive me a list of facts stated in the above context, don't include your own response like 'certainly."}]
     )
     facts = response.choices[0].message['content'].strip()
-    logging.info(f"\n\nFacts: {facts}\n\n")
+    logging.info(f"\n\nFacts:\n{facts}\n\n")
     
     return facts
 
@@ -102,10 +102,8 @@ def main(myblob: func.InputStream):
     # Facts: Get the facts in the generated content
     facts = getFacts(outline)
     facts_arr = facts.split('\n')
-    logging.info("===============================================================\n")
     for i in facts_arr:
-        logging.info(i)
-    logging.info("===============================================================\n")
+        logging.info(f"Google if this is true: '{i}'")
 
 
     ### OUTPUT
