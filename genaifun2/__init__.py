@@ -101,7 +101,11 @@ def main(myblob: func.InputStream):
 
     # Facts: Get the facts in the generated content
     facts = getFacts(outline)
-
+    facts_arr = facts.split('\n')
+    logging.info("===============================================================\n")
+    for i in facts_arr:
+        logging.info(i)
+    logging.info("===============================================================\n")
 
 
     ### OUTPUT
