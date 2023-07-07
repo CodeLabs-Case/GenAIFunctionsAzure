@@ -102,9 +102,10 @@ def main(myblob: func.InputStream):
     # Facts: Get the facts in the generated content
     facts = getFacts(outline)
     facts_arr = facts.split('\n')
-    for i in range(len(facts_arr)):
-        facts_arr[i] = f"Google if this is true: '{facts_arr[i]}'\n"
-    for i in facts_arr:    
+    output_facts_arr = []
+    for i in facts_arr:
+        output_facts_arr.append(f"Google if this is true: '{i}'\n")
+    for i in output_facts_arr:    
         logging.info(i)
 
 
