@@ -102,9 +102,10 @@ def main(myblob: func.InputStream):
     # Facts: Get the facts in the generated content
     facts = getFacts(outline)
     facts_arr = facts.split('\n')
-    for i in facts_arr:
-        logging.info(f"Google if this is true: '{i}'")
-
+    for i in range(len(facts_arr)):
+        facts_arr[i] = f"Google if this is true: '{i}'\n"
+    for i in facts_arr:    
+        logging.info(i)
 
     ### OUTPUT
     timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
