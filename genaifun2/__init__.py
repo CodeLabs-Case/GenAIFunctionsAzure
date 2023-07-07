@@ -103,10 +103,11 @@ def main(myblob: func.InputStream):
     facts = getFacts(outline)
     facts_arr = facts.split('\n')
     output_facts_arr = []
+    output_facts_str = ''
     for i in facts_arr:
         output_facts_arr.append(f"Google if this is true: '{i}'\n")
     for i in output_facts_arr:    
-        logging.info(i)
+        output_facts_str += i
 
 
 
@@ -117,4 +118,4 @@ def main(myblob: func.InputStream):
     blob_service_client = BlobServiceClient.from_connection_string(connection_string)
     container_client = blob_service_client.get_container_client(output_container_name)
     blob_client = container_client.get_blob_client(file_name)
-    blob_client.upload_blob(facts, overwrite=True)
+    blob_client.upload_blob(output_facts_str, overwrite=True)
