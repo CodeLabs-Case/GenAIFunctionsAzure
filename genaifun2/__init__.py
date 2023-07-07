@@ -21,18 +21,18 @@ blob_service_client = BlobServiceClient.from_connection_string(connection_string
 # Get a reference to the container
 container_client = blob_service_client.get_container_client(input_container_name)
 
-def f_outline(prompt):
+def getOutline(prompt):
     response = openai.ChatCompletion.create(
         model = 'gpt-3.5-turbo-16k',
         messages = [
             {'role': 'system','content':f"{prompt}"}]
     )
     outline = response.choices[0].message['content'].strip()
-    logging.info(f"\n\nOutline: {outline}\n\n")
+    logging.info(f"\n\nOutline:\n{outline}\n\n")
 
     return outline
 
-def f_expansion(outline):
+def getExpansion(outline):
     response = openai.ChatCompletion.create(
         model = 'gpt-3.5-turbo-16k',
         messages = [
@@ -58,14 +58,14 @@ def f_expansion(outline):
     
     return final_string
 
-def f_facts(outline):
+def getFacts(outline):
     response = openai.ChatCompletion.create(
         model = 'gpt-3.5-turbo-16k',
         messages = [
             {'role': 'system','content':f"Context: {outline}\nGive me a list of facts stated in the above context, don't include your own response like 'certainly."}]
     )
     facts = response.choices[0].message['content'].strip()
-    logging.info(f"\n\nFacts: {facts}\n\n")
+    logging.info(f"\n\nFacts:\n{facts}\n\n")
     
     return facts
 
@@ -94,13 +94,20 @@ def main(myblob: func.InputStream):
     openai.api_key = openai_api_key
     
     # Outline: Get the outline, re-use it 'n' times for each point
-    outline = f_outline(prompt)
+    outline = getOutline(prompt)
     
     # Expansion: Get the number of points in the outline 'n'. Commented out due to rate limit issues.
-    #expansion = f_expansion(outline)
+    #expansion = getExpansion(outline)
 
     # Facts: Get the facts in the generated content
-    facts = f_facts(outline)
+    facts = getFacts(outline)
+    facts_arr = facts.split('\n')
+    output_facts_arr = []
+    output_facts_str = ''
+    for i in facts_arr:
+        output_facts_arr.append(f"Google if this is true: '{i}'\n")
+    for i in output_facts_arr:    
+        output_facts_str += i
 
 
 
@@ -111,4 +118,4 @@ def main(myblob: func.InputStream):
     blob_service_client = BlobServiceClient.from_connection_string(connection_string)
     container_client = blob_service_client.get_container_client(output_container_name)
     blob_client = container_client.get_blob_client(file_name)
-    blob_client.upload_blob(facts, overwrite=True)
+    blob_client.upload_blob(output_facts_str, overwrite=True)
