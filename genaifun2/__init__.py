@@ -21,7 +21,7 @@ blob_service_client = BlobServiceClient.from_connection_string(connection_string
 # Get a reference to the container
 container_client = blob_service_client.get_container_client(input_container_name)
 
-def f_outline(prompt):
+def getOutline(prompt):
     response = openai.ChatCompletion.create(
         model = 'gpt-3.5-turbo-16k',
         messages = [
@@ -32,7 +32,7 @@ def f_outline(prompt):
 
     return outline
 
-def f_expansion(outline):
+def getExpansion(outline):
     response = openai.ChatCompletion.create(
         model = 'gpt-3.5-turbo-16k',
         messages = [
@@ -58,7 +58,7 @@ def f_expansion(outline):
     
     return final_string
 
-def f_facts(outline):
+def getFacts(outline):
     response = openai.ChatCompletion.create(
         model = 'gpt-3.5-turbo-16k',
         messages = [
@@ -94,13 +94,13 @@ def main(myblob: func.InputStream):
     openai.api_key = openai_api_key
     
     # Outline: Get the outline, re-use it 'n' times for each point
-    outline = f_outline(prompt)
+    outline = getOutline(prompt)
     
     # Expansion: Get the number of points in the outline 'n'. Commented out due to rate limit issues.
-    #expansion = f_expansion(outline)
+    #expansion = getExpansion(outline)
 
     # Facts: Get the facts in the generated content
-    facts = f_facts(outline)
+    facts = getFacts(outline)
 
 
 
