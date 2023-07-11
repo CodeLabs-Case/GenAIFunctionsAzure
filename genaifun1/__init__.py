@@ -41,6 +41,7 @@ def main(myblob: func.InputStream):
 
 
     ### TRANSFORMATION(S)
+    '''
     # Split the lines of the context variable into separate rows
     lines = context.split('\n')
     rows = [line.split(',') for line in lines]
@@ -52,23 +53,21 @@ def main(myblob: func.InputStream):
     df = pd.DataFrame(rows[1:], columns=column_names)
     logging.info(f"\n===============\nDataframe Contents:\n{df}\n===============\n")
 
-    '''
+    
     # Do a small upper transform on the review colum and log it
     df['review'] = df['review'].str.upper()
     reviews = df['review']
     logging.info(f"\n===============\nReviews:\n{reviews}\n===============\n")
     '''
 
-
     ### OPENAI
     # Convert the dataframe back to a .csv for passing to OpenAI within a prompt
-    csv_data = df.to_csv(index=False)
 
     openai.api_key = openai_api_key
     response = openai.ChatCompletion.create(
         model = 'gpt-3.5-turbo-16k',
         messages = [
-            {'role': 'system','content':f"I am going to give you csv data.Output csv data here with [product, review, type] headers where you use semantic analysis to determine if the review was [good, bad or neutral]. Here is the data: {csv_data}"}]
+            {'role': 'system','content':f"I am going to give you text data. Output csv data here with [product, review, type] headers where you use semantic analysis to determine if the review was [good, bad or neutral]. Here is the data: {context}"}]
     )
     content = response.choices[0].message['content'].strip()
 
