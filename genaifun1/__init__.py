@@ -39,6 +39,7 @@ def main(myblob: func.InputStream):
     with urllib.request.urlopen(blob_url) as response:
         context = response.read().decode('utf-8')
 
+    logging.info(f"Data:\n{context}")
 
     ### TRANSFORMATION(S)
     '''
@@ -62,7 +63,7 @@ def main(myblob: func.InputStream):
 
     ### OPENAI
     # Convert the dataframe back to a .csv for passing to OpenAI within a prompt
-
+    logging.info(f"\nAPI call...")
     openai.api_key = openai_api_key
     response = openai.ChatCompletion.create(
         model = 'gpt-3.5-turbo-16k',
