@@ -11,6 +11,8 @@ import os
 import re
 import time
 
+
+# Storage Account and Container configuration
 connection_string = 'DefaultEndpointsProtocol=https;AccountName=genaiazurefun;AccountKey=m8WBdyeSy8tctCi/4phepBAcQhy0VhtiN+3nWsl0/w+F00HesbMGb8bz6KuS073l4kS3S6Wif4+L+AStyeZ+Qg==;EndpointSuffix=core.windows.net'
 input_container_name = 'container2'
 output_container_name = 'container2output'
